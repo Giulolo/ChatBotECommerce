@@ -26,61 +26,46 @@ const NavBar = () => {
   
   return (
     <>
-      <nav className="bg-white shadow-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-3">
+      <nav className="bg-white sticky top-0 z-50 pt-4 pb-2">
+        <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-10">
-              <Link href="/" className="font-poppins font-semibold text-2xl text-accent">
-                e-Commerse
+            <div className="flex items-center space-x-4">
+              <Link href="/" className="flex items-center">
+                <span className="font-semibold text-base mr-2">logo</span>
+                <div className="border border-gray-300 rounded p-1 w-6 h-6 flex items-center justify-center">
+                  <i className="fas fa-bars text-xs"></i>
+                </div>
               </Link>
-              <div className="hidden md:flex space-x-6">
-                <Link href="/" className="font-poppins text-foreground hover:text-primary transition-colors">
-                  Home
-                </Link>
-                <Link href="/#productos" className="font-poppins text-foreground hover:text-primary transition-colors">
-                  Productos
-                </Link>
-                <Link href="/#contacto" className="font-poppins text-foreground hover:text-primary transition-colors">
-                  Contacto
-                </Link>
-              </div>
             </div>
             
-            <div className="flex items-center space-x-4">
-              <div className="relative hidden md:block">
+            <div className="hidden md:flex space-x-8 mx-auto">
+              <Link href="/" className="font-medium text-amber-600 hover:text-amber-700 transition-colors">
+                Home
+              </Link>
+              <Link href="/#productos" className="font-medium text-amber-600 hover:text-amber-700 transition-colors">
+                Productos
+              </Link>
+              <Link href="/#contacto" className="font-medium text-amber-600 hover:text-amber-700 transition-colors">
+                Contacto
+              </Link>
+            </div>
+            
+            <div className="flex items-center">
+              <div className="relative hidden md:block mr-4">
                 <Input 
                   type="text" 
-                  placeholder="Buscar productos..." 
-                  className="w-64 px-4 py-2 rounded-full bg-secondary/30 focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  placeholder="" 
+                  className="w-64 px-4 py-2 rounded-full bg-pink-100 border-0 focus:outline-none focus:ring-1 focus:ring-pink-300"
                 />
-                <button className="absolute right-3 top-2 text-gray-500">
-                  <i className="fas fa-search"></i>
-                </button>
               </div>
               
-              <button 
-                onClick={toggleCart}
-                className="relative p-2 text-foreground hover:text-primary transition-colors"
-              >
-                <i className="fas fa-shopping-cart text-xl"></i>
-                <span className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  {cart.summary?.itemCount || 0}
-                </span>
-              </button>
-              
-              <Link href="/orders">
-                <Button 
-                  variant="ghost" 
-                  size="icon"
-                  className="p-2 rounded-full bg-primary/10 text-foreground hover:bg-primary/20 transition-colors"
-                >
-                  <i className="fas fa-user"></i>
-                </Button>
-              </Link>
+              <div className="w-10 h-10 bg-orange-200 rounded-full flex items-center justify-center">
+                <i className="fas fa-user text-orange-800"></i>
+              </div>
               
               <button 
                 onClick={toggleMobileMenu}
-                className="md:hidden p-2 text-foreground hover:text-primary transition-colors"
+                className="md:hidden ml-4 p-2 text-foreground hover:text-primary transition-colors"
               >
                 <i className="fas fa-bars text-xl"></i>
               </button>

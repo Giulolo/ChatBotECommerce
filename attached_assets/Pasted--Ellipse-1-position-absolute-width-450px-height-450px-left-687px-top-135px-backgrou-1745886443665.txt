@@ -1,0 +1,410 @@
+/* Ellipse 1 */
+
+position: absolute;
+width: 450px;
+height: 450px;
+left: 687px;
+top: 135px;
+
+background: #FDBC9B;
+
+
+/* e-Commerse Website */
+
+position: absolute;
+width: 609px;
+height: 129px;
+left: 93px;
+top: 129px;
+
+font-family: 'Knewave';
+font-style: normal;
+font-weight: 400;
+font-size: 96px;
+line-height: 149px;
+
+color: #ED8FB1;
+
+
+
+/* Rectangle 5 */
+
+position: absolute;
+width: 198px;
+height: 72px;
+left: 969px;
+top: 175px;
+
+background: #FFFFFF;
+box-shadow: 0px 4px 4px 2px rgba(0, 0, 0, 0.25);
+border-radius: 50px;
+
+
+/* Rectangle 6 */
+
+position: absolute;
+width: 198px;
+height: 72px;
+left: 630px;
+top: 432px;
+
+background: #FFFFFF;
+box-shadow: 0px 4px 4px 2px rgba(0, 0, 0, 0.25);
+border-radius: 50px;
+
+
+/* Rectangle 7 */
+
+position: absolute;
+width: 257px;
+height: 72px;
+left: 123px;
+top: 526px;
+
+background: #CB9C5E;
+box-shadow: -1px 6px 10px 2px rgba(0, 0, 0, 0.25);
+border-radius: 50px;
+
+
+/* Ellipse 2 */
+
+position: absolute;
+width: 52px;
+height: 47px;
+left: 141px;
+top: 538px;
+
+background: #FFFFFF;
+
+
+/* package_car */
+
+position: absolute;
+width: 24px;
+height: 24px;
+left: 155px;
+top: 545px;
+
+
+
+/* Ellipse 65 */
+
+position: absolute;
+left: 58.33%;
+right: 25%;
+top: 70.83%;
+bottom: 12.5%;
+
+/* Line_icon */
+border: 2px solid #33363F;
+
+
+/* Ellipse 66 */
+
+position: absolute;
+left: 29.17%;
+right: 54.17%;
+top: 70.83%;
+bottom: 12.5%;
+
+/* Line_icon */
+border: 2px solid #33363F;
+
+
+/* Vector 582 */
+
+position: absolute;
+left: 16.67%;
+right: 16.67%;
+top: 29.17%;
+bottom: 20.83%;
+
+border: 2px solid #33363F;
+
+
+/* Comprar ahora */
+
+position: absolute;
+width: 166px;
+height: 37px;
+left: 214px;
+top: 548px;
+
+font-family: 'Bree Serif';
+font-style: normal;
+font-weight: 400;
+font-size: 20px;
+line-height: 27px;
+
+color: #FFFFFF;
+
+
+
+/* Ellipse 3 */
+
+position: absolute;
+width: 49px;
+height: 46px;
+left: 1167px;
+top: 41px;
+
+background: #FDBC9B;
+
+
+/* User_light */
+
+position: absolute;
+width: 24px;
+height: 24px;
+left: 1180px;
+top: 53px;
+
+
+
+/* Ellipse 45 */
+
+position: absolute;
+left: 16.67%;
+right: 16.67%;
+top: 66.67%;
+bottom: -16.67%;
+
+/* fill_icon */
+border: 1px solid #222222;
+
+
+/* Ellipse 46 */
+
+position: absolute;
+left: 33.33%;
+right: 33.33%;
+top: 16.67%;
+bottom: 50%;
+
+/* fill_icon */
+border: 1px solid #222222;
+
+
+/* Rectangle 8 */
+
+position: absolute;
+width: 398px;
+height: 43px;
+left: 709px;
+top: 44px;
+
+background: #F5E2D9;
+border-radius: 20px;
+
+
+/* Rectangle 9 */
+
+position: absolute;
+width: 309px;
+height: 79px;
+left: 123px;
+top: 432px;
+
+background: #F5E2D9;
+border-radius: 10px;
+
+
+/* Home Productos Contacto */
+
+position: absolute;
+width: 267px;
+height: 27px;
+left: 389px;
+top: 50px;
+
+font-family: 'Bree Serif';
+font-style: normal;
+font-weight: 400;
+font-size: 20px;
+line-height: 27px;
+
+color: #CB9C5E;
+
+
+
+/* Minimalistic */
+
+position: absolute;
+width: 136px;
+height: 33px;
+left: 1002px;
+top: 194px;
+
+font-family: 'Bree Serif';
+font-style: normal;
+font-weight: 400;
+font-size: 24px;
+line-height: 33px;
+/* identical to box height */
+
+color: #CB9C5E;
+
+
+
+/* .... */
+
+position: absolute;
+width: 22px;
+height: 33px;
+left: 640px;
+top: 455px;
+
+font-family: 'Bree Serif';
+font-style: normal;
+font-weight: 400;
+font-size: 24px;
+line-height: 33px;
+/* identical to box height */
+
+color: #CB9C5E;
+
+
+
+/* img del producto */
+
+position: absolute;
+width: 160px;
+height: 24px;
+left: 828px;
+top: 336px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 400;
+font-size: 20px;
+line-height: 24px;
+
+color: #000000;
+
+
+
+/* logo */
+
+position: absolute;
+width: 46px;
+height: 66px;
+left: 77px;
+top: 41px;
+
+font-family: 'Bree Serif';
+font-style: normal;
+font-weight: 400;
+font-size: 24px;
+line-height: 33px;
+
+color: #000000;
+
+
+
+/* Ellipse 4 */
+
+position: absolute;
+width: 131px;
+height: 133px;
+left: 1167px;
+top: 137px;
+
+background: #E9D686;
+
+
+/* Ellipse 5 */
+
+position: absolute;
+width: 131px;
+height: 133px;
+left: 1216px;
+top: 306px;
+
+background: #ED8FB1;
+
+
+/* Ellipse 6 */
+
+position: absolute;
+width: 131px;
+height: 133px;
+left: 1214px;
+top: 475px;
+
+background: #EBB477;
+
+
+/* img de otro p */
+
+position: absolute;
+width: 72px;
+height: 26px;
+left: 1197px;
+top: 187px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 400;
+font-size: 20px;
+line-height: 24px;
+
+color: #000000;
+
+
+
+/* Chat_light */
+
+position: absolute;
+width: 63px;
+height: 52px;
+left: 186px;
+top: 29px;
+
+border-radius: 50px;
+transform: matrix(-1, 0, 0, 1, 0, 0);
+
+
+/* Rectangle 1 */
+
+position: absolute;
+left: 83.33%;
+right: -50%;
+top: 16.67%;
+bottom: 16.67%;
+
+/* fill_icon */
+border: 1px solid #222222;
+border-radius: 9px 9px 2px 9px;
+transform: matrix(-1, 0, 0, 1, 0, 0);
+
+
+/* Vector 7 */
+
+box-sizing: border-box;
+
+position: absolute;
+left: 62.5%;
+right: 12.5%;
+top: 45.83%;
+bottom: 54.17%;
+
+/* fill_icon */
+border: 1px solid #222222;
+border-radius: 2px;
+transform: matrix(-1, 0, 0, 1, 0, 0);
+
+
+/* Vector 8 */
+
+box-sizing: border-box;
+
+position: absolute;
+left: 50%;
+right: 37.5%;
+top: 62.5%;
+bottom: 37.5%;
+
+/* fill_icon */
+border: 1px solid #222222;
+border-radius: 2px;
+transform: matrix(-1, 0, 0, 1, 0, 0);

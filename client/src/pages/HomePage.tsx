@@ -33,45 +33,57 @@ const HomePage = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-secondary/40 to-primary/20 py-16 md:py-24">
+      <div className="relative py-16 overflow-hidden">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center">
-            <div className="md:w-1/2 md:pr-12 mb-10 md:mb-0">
-              <h1 className="font-poppins font-bold text-4xl md:text-5xl text-foreground mb-4">
-                Encuentra productos excepcionales para tu estilo
+          <div className="flex flex-col md:flex-row items-center relative">
+            {/* Left side text content */}
+            <div className="md:w-1/2 md:pr-12 mb-10 md:mb-0 relative z-10">
+              <h1 className="font-knewave text-5xl md:text-8xl text-[#ED8FB1] leading-tight mb-10">
+                e-Commerse<br/>Website
               </h1>
-              <p className="text-lg text-foreground/80 mb-8">
-                Descubre nuestra colección cuidadosamente seleccionada de productos únicos con envío rápido y servicio premium.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <a
-                  href="#productos"
-                  className="btn-primary"
-                >
-                  Comprar ahora
-                </a>
-                <a
-                  href="#featured"
-                  className="btn-secondary"
-                >
-                  Ver destacados
-                </a>
+              
+              {/* Light pink rectangle */}
+              <div className="bg-[#F5E2D9] rounded-lg w-full md:w-[309px] h-20 mb-4 flex items-center px-4">
+                <span className="text-[#CB9C5E] font-bree-serif text-xl">...</span>
               </div>
+              
+              {/* Buy now button */}
+              <button className="bg-[#CB9C5E] text-white rounded-full px-12 py-4 shadow-lg flex items-center mt-4">
+                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mr-4">
+                  <i className="fas fa-shopping-cart text-[#CB9C5E]"></i>
+                </div>
+                <span className="font-bree-serif text-xl">Comprar ahora</span>
+              </button>
             </div>
+            
+            {/* Right side with circular elements */}
             <div className="md:w-1/2 relative">
-              <div className="absolute -left-16 -top-16 w-64 h-64 bg-accent rounded-full opacity-20 blur-xl"></div>
-              <div className="absolute -right-8 -bottom-8 w-48 h-48 bg-highlight rounded-full opacity-30 blur-xl"></div>
-              <div className="relative bg-primary/20 rounded-3xl overflow-hidden shadow-xl">
-                <img
-                  src="https://images.unsplash.com/photo-1627384113972-f4c9896e3e31?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                  alt="Featured products showcase"
-                  className="w-full rounded-3xl object-cover"
-                  style={{ aspectRatio: '4/3' }}
-                />
-                <div className="absolute top-6 right-6 bg-white px-4 py-2 rounded-full shadow-md">
-                  <span className="font-poppins font-medium">Minimalista</span>
+              {/* Main peach circle */}
+              <div className="absolute right-0 top-0 w-[450px] h-[450px] bg-[#FDBC9B] rounded-full"></div>
+              
+              {/* Product image label */}
+              <div className="absolute right-[100px] top-[200px] text-center z-20">
+                <span className="font-inter text-lg">img del producto</span>
+              </div>
+              
+              {/* White rounded rectangle with Minimalistic text */}
+              <div className="absolute top-[50px] right-[100px] bg-white px-8 py-4 rounded-full shadow-md z-20">
+                <span className="font-bree-serif text-2xl text-[#CB9C5E]">Minimalista</span>
+              </div>
+              
+              {/* Text dots */}
+              <div className="absolute top-[350px] left-[150px] bg-white px-6 py-3 rounded-full shadow-md z-20">
+                <span className="font-['Bree_Serif'] text-xl text-[#CB9C5E]">...</span>
+              </div>
+              
+              {/* Right decorative circles */}
+              <div className="absolute top-[10px] right-[-50px] w-[131px] h-[133px] bg-[#E9D686] rounded-full z-10">
+                <div className="absolute top-[50px] left-[30px] text-center">
+                  <span className="font-inter text-sm leading-tight">img de<br/>otro p</span>
                 </div>
               </div>
+              <div className="absolute top-[170px] right-[-80px] w-[131px] h-[133px] bg-[#ED8FB1] rounded-full z-10"></div>
+              <div className="absolute top-[340px] right-[-80px] w-[131px] h-[133px] bg-[#EBB477] rounded-full z-10"></div>
             </div>
           </div>
         </div>
