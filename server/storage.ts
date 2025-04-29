@@ -7,6 +7,8 @@ import {
   categories, type Category, type InsertCategory,
   type OrderWithItems
 } from "@shared/schema";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
 
 export interface IStorage {
   // Users
@@ -419,4 +421,236 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+// Create a new DatabaseStorage implementation
+export class DatabaseStorage implements IStorage {
+  async getUser(id: number): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user || undefined;
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.email, email));
+    return user || undefined;
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const [user] = await db
+      .insert(users)
+      .values(insertUser)
+      .returning();
+    return user;
+  }
+  
+  async getProducts(limit?: number): Promise<Product[]> {
+    let query = db.select().from(products);
+    if (limit) {
+      query = query.limit(limit);
+    }
+    return await query;
+  }
+  
+  async getProductsByCategory(category: string): Promise<Product[]> {
+    const categoryObj = await this.getCategoryBySlug(category);
+    if (!categoryObj) return [];
+    
+    return db.select()
+      .from(products)
+      .where(eq(products.categoryId, categoryObj.id));
+  }
+  
+  async getProduct(id: number): Promise<Product | undefined> {
+    const [product] = await db.select()
+      .from(products)
+      .where(eq(products.id, id));
+      
+    return product || undefined;
+  }
+  
+  async createProduct(insertProduct: InsertProduct): Promise<Product> {
+    const [product] = await db
+      .insert(products)
+      .values(insertProduct)
+      .returning();
+      
+    return product;
+  }
+  
+  async getCategories(): Promise<Category[]> {
+    return db.select().from(categories);
+  }
+  
+  async getCategory(id: number): Promise<Category | undefined> {
+    const [category] = await db.select()
+      .from(categories)
+      .where(eq(categories.id, id));
+      
+    return category || undefined;
+  }
+  
+  async getCategoryBySlug(slug: string): Promise<Category | undefined> {
+    const [category] = await db.select()
+      .from(categories)
+      .where(eq(categories.slug, slug));
+      
+    return category || undefined;
+  }
+  
+  async createCategory(insertCategory: InsertCategory): Promise<Category> {
+    const [category] = await db
+      .insert(categories)
+      .values(insertCategory)
+      .returning();
+      
+    return category;
+  }
+  
+  async getCartItemsBySession(sessionId: string): Promise<CartItem[]> {
+    return db.select()
+      .from(cartItems)
+      .where(eq(cartItems.sessionId, sessionId));
+  }
+  
+  async getCartItemWithProduct(id: number): Promise<CartItem & { product: Product } | undefined> {
+    const cartItem = await db.select()
+      .from(cartItems)
+      .where(eq(cartItems.id, id))
+      .limit(1);
+      
+    if (!cartItem.length) return undefined;
+    
+    const [product] = await db.select()
+      .from(products)
+      .where(eq(products.id, cartItem[0].productId));
+      
+    if (!product) return undefined;
+    
+    return { ...cartItem[0], product };
+  }
+  
+  async getCartItemsBySessionWithProduct(sessionId: string): Promise<(CartItem & { product: Product })[]> {
+    const items = await this.getCartItemsBySession(sessionId);
+    const result: (CartItem & { product: Product })[] = [];
+    
+    for (const item of items) {
+      const [product] = await db.select()
+        .from(products)
+        .where(eq(products.id, item.productId));
+        
+      if (product) {
+        result.push({ ...item, product });
+      }
+    }
+    
+    return result;
+  }
+  
+  async addToCart(insertCartItem: InsertCartItem): Promise<CartItem> {
+    const [cartItem] = await db
+      .insert(cartItems)
+      .values(insertCartItem)
+      .returning();
+      
+    return cartItem;
+  }
+  
+  async updateCartItem(id: number, quantity: number): Promise<CartItem | undefined> {
+    const [updatedCartItem] = await db
+      .update(cartItems)
+      .set({ quantity })
+      .where(eq(cartItems.id, id))
+      .returning();
+      
+    return updatedCartItem || undefined;
+  }
+  
+  async removeCartItem(id: number): Promise<boolean> {
+    await db
+      .delete(cartItems)
+      .where(eq(cartItems.id, id));
+      
+    return true;
+  }
+  
+  async clearCart(sessionId: string): Promise<boolean> {
+    await db
+      .delete(cartItems)
+      .where(eq(cartItems.sessionId, sessionId));
+      
+    return true;
+  }
+  
+  async createOrder(insertOrder: InsertOrder, items: InsertOrderItem[]): Promise<Order> {
+    // This should be in a transaction to ensure data integrity
+    const [order] = await db
+      .insert(orders)
+      .values(insertOrder)
+      .returning();
+      
+    for (const item of items) {
+      await db
+        .insert(orderItems)
+        .values({ ...item, orderId: order.id });
+    }
+    
+    return order;
+  }
+  
+  async getOrders(userId?: number): Promise<Order[]> {
+    if (userId) {
+      return db.select()
+        .from(orders)
+        .where(eq(orders.userId, userId));
+    }
+    
+    return db.select().from(orders);
+  }
+  
+  async getOrder(id: number): Promise<Order | undefined> {
+    const [order] = await db.select()
+      .from(orders)
+      .where(eq(orders.id, id));
+      
+    return order || undefined;
+  }
+  
+  async getOrderByNumber(orderNumber: string): Promise<Order | undefined> {
+    const [order] = await db.select()
+      .from(orders)
+      .where(eq(orders.orderNumber, orderNumber));
+      
+    return order || undefined;
+  }
+  
+  async getOrderWithItems(id: number): Promise<OrderWithItems | undefined> {
+    const order = await this.getOrder(id);
+    if (!order) return undefined;
+    
+    const items = await db.select()
+      .from(orderItems)
+      .where(eq(orderItems.orderId, id));
+      
+    return { ...order, items };
+  }
+  
+  async getOrdersByUserWithItems(userId: number): Promise<OrderWithItems[]> {
+    const userOrders = await this.getOrders(userId);
+    const result: OrderWithItems[] = [];
+    
+    for (const order of userOrders) {
+      const items = await db.select()
+        .from(orderItems)
+        .where(eq(orderItems.orderId, order.id));
+        
+      result.push({ ...order, items });
+    }
+    
+    return result;
+  }
+}
+
+export const storage = new DatabaseStorage();
