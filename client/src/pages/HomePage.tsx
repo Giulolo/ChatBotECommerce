@@ -73,7 +73,7 @@ const HomePage = () => {
               
               {/* Text dots */}
               <div className="absolute top-[350px] left-[150px] bg-white px-6 py-3 rounded-full shadow-md z-20">
-                <span className="font-['Bree_Serif'] text-xl text-[#CB9C5E]">...</span>
+                <span className="font-bree-serif text-xl text-[#CB9C5E]">...</span>
               </div>
               
               {/* Right decorative circles */}

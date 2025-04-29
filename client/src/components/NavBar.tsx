@@ -31,7 +31,7 @@ const NavBar = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <Link href="/" className="flex items-center">
-                <span className="font-semibold text-base mr-2">logo</span>
+                <span className="font-bree-serif text-2xl mr-2">logo</span>
                 <div className="border border-gray-300 rounded p-1 w-6 h-6 flex items-center justify-center">
                   <i className="fas fa-bars text-xs"></i>
                 </div>
@@ -39,13 +39,13 @@ const NavBar = () => {
             </div>
             
             <div className="hidden md:flex space-x-8 mx-auto">
-              <Link href="/" className="font-medium text-amber-600 hover:text-amber-700 transition-colors">
+              <Link href="/" className="font-bree-serif text-xl text-[#CB9C5E] hover:text-amber-700 transition-colors">
                 Home
               </Link>
-              <Link href="/#productos" className="font-medium text-amber-600 hover:text-amber-700 transition-colors">
+              <Link href="/#productos" className="font-bree-serif text-xl text-[#CB9C5E] hover:text-amber-700 transition-colors">
                 Productos
               </Link>
-              <Link href="/#contacto" className="font-medium text-amber-600 hover:text-amber-700 transition-colors">
+              <Link href="/#contacto" className="font-bree-serif text-xl text-[#CB9C5E] hover:text-amber-700 transition-colors">
                 Contacto
               </Link>
             </div>
@@ -77,24 +77,21 @@ const NavBar = () => {
         {mobileMenuOpen && (
           <div className="md:hidden">
             <div className="px-4 py-3 space-y-2 bg-white border-t">
-              <Link href="/" className="block px-3 py-2 rounded-md hover:bg-secondary/20 font-medium">
+              <Link href="/" className="block px-3 py-2 rounded-md hover:bg-pink-50 font-bree-serif text-lg text-[#CB9C5E]">
                 Home
               </Link>
-              <Link href="/#productos" className="block px-3 py-2 rounded-md hover:bg-secondary/20 font-medium">
+              <Link href="/#productos" className="block px-3 py-2 rounded-md hover:bg-pink-50 font-bree-serif text-lg text-[#CB9C5E]">
                 Productos
               </Link>
-              <Link href="/#contacto" className="block px-3 py-2 rounded-md hover:bg-secondary/20 font-medium">
+              <Link href="/#contacto" className="block px-3 py-2 rounded-md hover:bg-pink-50 font-bree-serif text-lg text-[#CB9C5E]">
                 Contacto
               </Link>
               <div className="relative mt-3">
                 <Input 
                   type="text" 
-                  placeholder="Buscar productos..." 
-                  className="w-full px-4 py-2 rounded-full bg-secondary/30 focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  placeholder="" 
+                  className="w-full px-4 py-2 rounded-full bg-pink-100 border-0 focus:outline-none focus:ring-1 focus:ring-pink-300"
                 />
-                <button className="absolute right-3 top-2 text-gray-500">
-                  <i className="fas fa-search"></i>
-                </button>
               </div>
             </div>
           </div>
