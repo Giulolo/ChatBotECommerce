@@ -1,0 +1,1 @@
+export { default as CartPopup } from './components/CartPopup';
