@@ -18,4 +18,4 @@ export function PageHeader() {
       <img src="" alt="" className="w-0" loading="lazy" />
     </header>
   );
-}
+} 
