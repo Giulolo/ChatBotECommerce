@@ -100,7 +100,9 @@ export const useChatbot = () => {
   // keyword para buscar producto
   const productKeywords = {
     'laptop': ['laptop', 'computadora', 'computer'],
-    'smartphone': ['smartphone', 'phone', 'celular', 'telefono'],
+    'smartphone': ['smartphone', 'phone', 'celular', 'telefono', 'mobile'],
+    'iphone' : ['iphone', 'apple'],
+    'android' : ['android'],
     'headphones': ['audífonos', 'headphones', 'auriculares'],
     'watch': ['reloj', 'watch', 'smartwatch'],
     'tablet': ['tablet', 'tableta']

@@ -20,7 +20,7 @@ export const CartPopup: React.FC<CartPopupProps> = ({
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div className="bg-white rounded-lg p-6 w-96 max-w-lg shadow-xl">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="font-bold text-xl">Carrito de Compra</h3>
+            <h3 className="font-bold text-xl text-title">Carrito de Compra</h3>
             <button onClick={() => setIsCartOpen(false)} className="text-gray-500 hover:text-gray-700">
               <X size={24} />
             </button>
