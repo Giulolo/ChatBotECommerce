@@ -2,9 +2,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Product } from "@shared/schema";
-import { formatCurrency, generateStarRating } from "@/lib/utils";
 import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
+import { Minus, Plus, ShoppingCart, Tag } from "lucide-react";
+import { Link } from "wouter";
 
 interface ProductDetailsProps {
   product: Product | null;
@@ -14,8 +15,6 @@ interface ProductDetailsProps {
 
 const ProductDetails = ({ product, open, onClose }: ProductDetailsProps) => {
   const [quantity, setQuantity] = useState(1);
-  const [selectedColor, setSelectedColor] = useState('black');
-  const [selectedImage, setSelectedImage] = useState(0);
   const { addToCart } = useCart();
   const { toast } = useToast();
 
@@ -34,8 +33,7 @@ const ProductDetails = ({ product, open, onClose }: ProductDetailsProps) => {
   const handleAddToCart = () => {
     addToCart({
       productId: product.id,
-      quantity,
-      color: selectedColor
+      quantity
     });
     
     toast({
@@ -47,158 +45,105 @@ const ProductDetails = ({ product, open, onClose }: ProductDetailsProps) => {
     onClose();
   };
 
-  const handleColorSelect = (color: string) => {
-    setSelectedColor(color);
+  const handleProceedToCheckout = () => {
+    addToCart({
+      productId: product.id,
+      quantity
+    });
+    
+    onClose();
+    window.location.href = "/checkout";
   };
 
-  const colors = [
-    { name: 'Negro', value: 'black' },
-    { name: 'Blanco', value: 'white' },
-    { name: 'Azul', value: 'blue-500' },
-    { name: 'Rojo', value: 'red-500' }
-  ];
-
-  // Select the main image and additional images
-  const mainImage = product.imageUrls?.[selectedImage] || product.imageUrl;
-  const additionalImages = product.imageUrls || [product.imageUrl];
+  const price = parseFloat(product.price.toString());
+  const formattedPrice = price.toFixed(2);
+  const totalPrice = (price * quantity).toFixed(2);
 
   return (
     <Dialog open={open} onOpenChange={() => onClose()}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="font-poppins font-semibold text-2xl">Detalles del producto</DialogTitle>
+          <DialogTitle className="text-[#CB9C5E] text-2xl">Detalles del producto</DialogTitle>
           <DialogClose />
         </DialogHeader>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="space-y-4">
-            <div className="bg-neutral rounded-xl overflow-hidden">
-              <img 
-                src={mainImage} 
-                alt={product.name} 
-                className="w-full object-cover"
-                style={{ aspectRatio: '1/1' }}
-              />
-            </div>
-            
-            <div className="grid grid-cols-4 gap-2">
-              {additionalImages.map((image, index) => (
-                <button 
-                  key={index}
-                  className={`border-2 ${selectedImage === index ? 'border-primary' : 'border-transparent hover:border-primary'} rounded-lg overflow-hidden`}
-                  onClick={() => setSelectedImage(index)}
-                >
-                  <img 
-                    src={image} 
-                    alt={`${product.name} vista ${index + 1}`} 
-                    className="w-full aspect-square object-cover" 
-                  />
-                </button>
-              ))}
-            </div>
+          {/* Product Image */}
+          <div className="bg-[#FDBC9B] rounded-xl p-6 flex items-center justify-center">
+            <img 
+              src={product.image || ''}
+              alt={product.name} 
+              className="max-w-full max-h-[400px] object-contain"
+            />
           </div>
           
+          {/* Product Details */}
           <div>
-            <div className="mb-4">
-              <h1 className="font-poppins font-semibold text-2xl">{product.name}</h1>
-              <div className="flex items-center mt-2">
-                <div className="flex text-yellow-400">
-                  {generateStarRating(product.rating as number)}
-                </div>
-                <span className="text-gray-500 ml-2">({product.reviewCount} reviews)</span>
-              </div>
+            <h1 className="text-2xl font-semibold mb-3">{product.name}</h1>
+            
+            <div className="flex items-center mb-4">
+              <Tag className="text-[#CB9C5E] mr-2 h-5 w-5" />
+              <span className="text-2xl font-bold text-[#CB9C5E]">${formattedPrice}</span>
             </div>
             
             <div className="mb-6">
-              <div className="flex items-center mb-2">
-                <span className="font-poppins font-semibold text-2xl">{formatCurrency(product.price)}</span>
-                {product.comparePrice && (
-                  <>
-                    <span className="text-gray-400 text-lg line-through ml-3">{formatCurrency(product.comparePrice)}</span>
-                    <span className="ml-3 bg-primary text-white text-sm px-2 py-1 rounded-full">
-                      -{Math.round((1 - (parseFloat(product.price.toString()) / parseFloat(product.comparePrice.toString()))) * 100)}%
-                    </span>
-                  </>
-                )}
-              </div>
-              <p className="text-green-600 text-sm">
-                <i className="fas fa-check-circle mr-1"></i> En stock - Envío en 24 horas
+              <p className="text-gray-700 mb-4">
+                {product.description || 'Sin descripción disponible'}
               </p>
             </div>
             
-            <div className="mb-6">
-              <h3 className="font-poppins font-medium mb-2">Descripción</h3>
-              <p className="text-gray-600">
-                {product.description}
-              </p>
-              <ul className="mt-3 space-y-1 text-gray-600">
-                <li className="flex items-start">
-                  <i className="fas fa-circle text-xs mt-1.5 mr-2 text-primary"></i>
-                  <span>Cancelación de ruido activa</span>
-                </li>
-                <li className="flex items-start">
-                  <i className="fas fa-circle text-xs mt-1.5 mr-2 text-primary"></i>
-                  <span>Bluetooth 5.0 con alcance de 10m</span>
-                </li>
-                <li className="flex items-start">
-                  <i className="fas fa-circle text-xs mt-1.5 mr-2 text-primary"></i>
-                  <span>Batería de 30 horas de duración</span>
-                </li>
-                <li className="flex items-start">
-                  <i className="fas fa-circle text-xs mt-1.5 mr-2 text-primary"></i>
-                  <span>Controles táctiles intuitivos</span>
-                </li>
-              </ul>
-            </div>
-            
-            <div className="mb-6">
-              <h3 className="font-poppins font-medium mb-3">Color</h3>
-              <div className="flex space-x-3">
-                {colors.map((color) => (
-                  <button 
-                    key={color.value}
-                    className={`w-8 h-8 rounded-full bg-${color.value} ${color.value === 'white' ? 'border border-gray-300' : ''} ${selectedColor === color.value ? 'ring-2 ring-offset-2 ring-black' : ''}`}
-                    onClick={() => handleColorSelect(color.value)}
-                    aria-label={`Color ${color.name}`}
-                  />
-                ))}
-              </div>
-            </div>
-            
-            <div className="mb-8">
-              <div className="flex items-center mb-6">
-                <div className="flex items-center border rounded-lg mr-4">
-                  <button 
+            {/* Quantity Selector */}
+            <div className="border-t border-b py-4 mb-6">
+              <div className="flex items-center justify-between">
+                <span className="text-gray-700 font-medium">Cantidad</span>
+                
+                <div className="flex items-center">
+                  <Button 
+                    variant="outline" 
+                    size="icon"
+                    className="h-8 w-8 rounded-full"
                     onClick={handleDecreaseQuantity}
-                    className="px-3 py-2 border-r hover:bg-gray-100"
                   >
-                    <i className="fas fa-minus"></i>
-                  </button>
-                  <span className="px-4 py-2">{quantity}</span>
-                  <button 
+                    <Minus className="h-4 w-4" />
+                  </Button>
+                  
+                  <span className="mx-4 font-medium">{quantity}</span>
+                  
+                  <Button 
+                    variant="outline" 
+                    size="icon"
+                    className="h-8 w-8 rounded-full"
                     onClick={handleIncreaseQuantity}
-                    className="px-3 py-2 border-l hover:bg-gray-100"
                   >
-                    <i className="fas fa-plus"></i>
-                  </button>
+                    <Plus className="h-4 w-4" />
+                  </Button>
                 </div>
-                <span className="text-gray-500">Disponible: 12 unidades</span>
               </div>
+            </div>
+            
+            {/* Total Price */}
+            <div className="flex justify-between items-center mb-6">
+              <span className="text-gray-700 font-medium">Total:</span>
+              <span className="text-xl font-bold text-[#CB9C5E]">${totalPrice}</span>
+            </div>
+            
+            {/* Action Buttons */}
+            <div className="flex flex-col space-y-3">
+              <Button 
+                onClick={handleAddToCart}
+                className="w-full bg-[#CB9C5E] hover:bg-amber-600 text-white rounded-full py-3"
+              >
+                <ShoppingCart className="mr-2 h-5 w-5" />
+                Añadir al carrito
+              </Button>
               
-              <div className="flex flex-col sm:flex-row gap-3">
-                <Button 
-                  onClick={handleAddToCart}
-                  className="flex-1 px-6 py-3 bg-primary hover:bg-primary/90 text-white font-poppins font-medium rounded-xl shadow-lg shadow-primary/20 transition-all transform hover:-translate-y-1"
-                >
-                  <i className="fas fa-cart-plus mr-2"></i> Añadir al carrito
-                </Button>
-                <Button 
-                  variant="outline"
-                  className="px-6 py-3 border border-gray-300 hover:bg-gray-50 text-foreground font-poppins font-medium rounded-xl transition-all"
-                >
-                  <i className="far fa-heart mr-2"></i> Guardar
-                </Button>
-              </div>
+              <Button 
+                onClick={handleProceedToCheckout}
+                variant="outline"
+                className="w-full border-[#CB9C5E] text-[#CB9C5E] hover:bg-amber-50 rounded-full py-3"
+              >
+                Comprar ahora
+              </Button>
             </div>
           </div>
         </div>
