@@ -6,6 +6,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { useEffect, useState } from "react";
 import { nanoid } from "nanoid";
 import { useCart } from "@/contexts/CartContext";
+import { AuthProvider } from "@/hooks/use-auth";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
@@ -14,6 +16,7 @@ import CheckoutPage from "@/pages/CheckoutPage";
 import OrderConfirmationPage from "@/pages/OrderConfirmationPage";
 import OrdersHistoryPage from "@/pages/OrdersHistoryPage";
 import OrderDetailsPage from "@/pages/OrderDetailsPage";
+import AuthPage from "@/pages/auth-page";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -40,10 +43,11 @@ function Router() {
       <main className="min-h-screen">
         <Switch>
           <Route path="/" component={HomePage} />
-          <Route path="/checkout" component={CheckoutPage} />
-          <Route path="/order-confirmation/:orderNumber" component={OrderConfirmationPage} />
-          <Route path="/orders" component={OrdersHistoryPage} />
-          <Route path="/orders/:id" component={OrderDetailsPage} />
+          <Route path="/auth" component={AuthPage} />
+          <ProtectedRoute path="/checkout" component={CheckoutPage} />
+          <ProtectedRoute path="/order-confirmation/:orderNumber" component={OrderConfirmationPage} />
+          <ProtectedRoute path="/orders" component={OrdersHistoryPage} />
+          <ProtectedRoute path="/orders/:id" component={OrderDetailsPage} />
           <Route component={NotFound} />
         </Switch>
       </main>
@@ -55,10 +59,12 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Router />
-      </TooltipProvider>
+      <AuthProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Router />
+        </TooltipProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
