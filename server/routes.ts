@@ -1,16 +1,23 @@
-import type { Express, Request, Response } from "express";
+import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { nanoid } from "nanoid";
+import { db } from "./db";
 import { 
   insertProductSchema, 
   insertCartItemSchema,
   insertOrderSchema,
-  insertOrderItemSchema
+  insertOrderItemSchema,
+  insertUserSchema,
+  orders
 } from "@shared/schema";
+import { eq } from "drizzle-orm";
 import { z } from "zod";
+import { setupAuth } from "./auth";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Set up authentication
+  setupAuth(app);
+
   // API routes with /api prefix
   
   // PRODUCTS
@@ -21,22 +28,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(products);
     } catch (error) {
       res.status(500).json({ message: "Error fetching products" });
-    }
-  });
-  
-  app.get("/api/products/category/:slug", async (req: Request, res: Response) => {
-    try {
-      const { slug } = req.params;
-      const category = await storage.getCategoryBySlug(slug);
-      
-      if (!category) {
-        return res.status(404).json({ message: "Category not found" });
-      }
-      
-      const products = await storage.getProductsByCategory(category.name);
-      res.json(products);
-    } catch (error) {
-      res.status(500).json({ message: "Error fetching products by category" });
     }
   });
   
@@ -57,16 +48,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(product);
     } catch (error) {
       res.status(500).json({ message: "Error fetching product" });
-    }
-  });
-  
-  // CATEGORIES
-  app.get("/api/categories", async (req: Request, res: Response) => {
-    try {
-      const categories = await storage.getCategories();
-      res.json(categories);
-    } catch (error) {
-      res.status(500).json({ message: "Error fetching categories" });
     }
   });
   
@@ -117,10 +98,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Session ID is required" });
       }
       
+      // Get user ID if authenticated
+      const userId = req.isAuthenticated() ? (req.user as Express.User).id : undefined;
+      
       // Validate request body
       const validationResult = insertCartItemSchema
-        .omit({ userId: true })
-        .safeParse({ ...req.body, sessionId });
+        .safeParse({ ...req.body, sessionId, userId });
       
       if (!validationResult.success) {
         return res.status(400).json({ 
@@ -310,75 +293,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Cart is empty" });
       }
       
-      // Validate order data
-      const OrderRequestSchema = z.object({
-        customerName: z.string(),
-        customerEmail: z.string().email(),
-        customerPhone: z.string().optional(),
-        shippingAddress: z.string(),
-        shippingCity: z.string(),
-        shippingPostalCode: z.string(),
-        shippingProvince: z.string(),
-        shippingCountry: z.string(),
-        paymentMethod: z.string()
-      });
-      
-      const validationResult = OrderRequestSchema.safeParse(req.body);
-      
-      if (!validationResult.success) {
-        return res.status(400).json({ 
-          message: "Invalid order data",
-          errors: validationResult.error.errors 
-        });
-      }
-      
-      const orderData = validationResult.data;
-      
-      // Calculate totals
-      let subtotal = 0;
+      // Calculate total
+      let total = 0;
       cartItems.forEach(item => {
         const itemPrice = parseFloat(item.product.price.toString());
-        subtotal += itemPrice * item.quantity;
+        total += itemPrice * item.quantity;
       });
       
-      const shipping = 9.99;
-      const taxes = subtotal * 0.08; // 8% tax rate
-      const total = subtotal + shipping + taxes;
-      
-      // Generate order number
-      const orderNumber = `ORD-${nanoid(5).toUpperCase()}`;
+      // Get user ID if authenticated
+      const userId = req.isAuthenticated() ? (req.user as Express.User).id : undefined;
       
       // Create order
       const order = await storage.createOrder(
         {
-          orderNumber,
-          userId: undefined,
-          status: "pending",
-          subtotal: subtotal.toString(),
-          shipping: shipping.toString(),
-          taxes: taxes.toString(),
+          userId: userId,
           total: total.toString(),
-          paymentMethod: orderData.paymentMethod,
-          shippingAddress: orderData.shippingAddress,
-          shippingCity: orderData.shippingCity,
-          shippingPostalCode: orderData.shippingPostalCode,
-          shippingProvince: orderData.shippingProvince,
-          shippingCountry: orderData.shippingCountry,
-          customerName: orderData.customerName,
-          customerEmail: orderData.customerEmail,
-          customerPhone: orderData.customerPhone
+          status: "pending",
+          paymentProof: null
         },
         // Create order items
         cartItems.map(item => ({
           orderId: 0, // This will be set by storage
           productId: item.productId,
-          productName: item.product.name,
-          productImageUrl: item.product.imageUrl,
-          price: item.product.price.toString(),
           quantity: item.quantity,
-          color: item.color,
-          size: item.size,
-          subtotal: (parseFloat(item.product.price.toString()) * item.quantity).toString()
+          price: item.product.price.toString()
         }))
       );
       
@@ -390,33 +328,81 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       res.status(201).json(orderWithItems);
     } catch (error) {
+      console.error("Error creating order:", error);
       res.status(500).json({ message: "Error creating order" });
+    }
+  });
+  
+  // Upload payment proof
+  app.put("/api/orders/:id/payment-proof", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Please login to update order" });
+      }
+      
+      const id = parseInt(req.params.id);
+      
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid order ID" });
+      }
+      
+      const order = await storage.getOrder(id);
+      
+      if (!order) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+      
+      // Ensure user can only update their own orders
+      if (order.userId !== (req.user as Express.User).id) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      // Validate request body
+      const schema = z.object({
+        paymentProof: z.string().min(1)
+      });
+      
+      const validationResult = schema.safeParse(req.body);
+      
+      if (!validationResult.success) {
+        return res.status(400).json({ 
+          message: "Invalid payment proof data",
+          errors: validationResult.error.errors 
+        });
+      }
+      
+      // Update order
+      const updatedOrder = await db
+        .update(orders)
+        .set({ 
+          paymentProof: validationResult.data.paymentProof,
+          status: "validated" // Automatically update status when proof is provided
+        })
+        .where(eq(orders.id, id))
+        .returning();
+      
+      // Return order with items
+      const orderWithItems = await storage.getOrderWithItems(id);
+      
+      res.json(orderWithItems);
+    } catch (error) {
+      console.error("Error updating payment proof:", error);
+      res.status(500).json({ message: "Error updating payment proof" });
     }
   });
   
   app.get("/api/orders", async (req: Request, res: Response) => {
     try {
-      // Without authentication, we'll use email to fetch orders
-      const email = req.query.email as string;
-      
-      if (!email) {
-        return res.status(400).json({ message: "Email is required" });
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Please login to view orders" });
       }
       
-      // Get all orders
-      const allOrders = await storage.getOrders();
+      const userId = (req.user as Express.User).id;
       
-      // Filter orders by customer email
-      const customerOrders = allOrders.filter(order => order.customerEmail === email);
+      // Get orders for user with items
+      const userOrders = await storage.getOrdersByUserWithItems(userId);
       
-      // Get order details with items
-      const ordersWithItems = await Promise.all(
-        customerOrders.map(async order => {
-          return await storage.getOrderWithItems(order.id);
-        })
-      );
-      
-      res.json(ordersWithItems);
+      res.json(userOrders);
     } catch (error) {
       res.status(500).json({ message: "Error fetching orders" });
     }
@@ -424,6 +410,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   app.get("/api/orders/:id", async (req: Request, res: Response) => {
     try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Please login to view order details" });
+      }
+      
       const id = parseInt(req.params.id);
       
       if (isNaN(id)) {
@@ -436,25 +426,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Order not found" });
       }
       
-      res.json(order);
-    } catch (error) {
-      res.status(500).json({ message: "Error fetching order" });
-    }
-  });
-  
-  app.get("/api/orders/number/:orderNumber", async (req: Request, res: Response) => {
-    try {
-      const { orderNumber } = req.params;
-      
-      const order = await storage.getOrderByNumber(orderNumber);
-      
-      if (!order) {
-        return res.status(404).json({ message: "Order not found" });
+      // Ensure user can only see their own orders
+      if (order.userId !== (req.user as Express.User).id) {
+        return res.status(403).json({ message: "Access denied" });
       }
       
-      const orderWithItems = await storage.getOrderWithItems(order.id);
-      
-      res.json(orderWithItems);
+      res.json(order);
     } catch (error) {
       res.status(500).json({ message: "Error fetching order" });
     }
