@@ -84,37 +84,42 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="flex min-h-screen">
-      {/* Hero section (right side) */}
-      <div className="hidden md:flex md:w-1/2 bg-primary p-10 text-white items-center">
-        <div className="max-w-md mx-auto">
-          <h1 className="text-4xl font-bold mb-6">Bienvenido a nuestra tienda</h1>
-          <p className="text-xl mb-8">
-            Descubre productos naturales y artesanales para el cuidado personal y del hogar.
-          </p>
-          <div className="bg-white/10 p-6 rounded-lg backdrop-blur-sm">
-            <blockquote className="italic">
-              "Nuestros productos están elaborados con ingredientes naturales y sostenibles, 
-              promoviendo un estilo de vida en armonía con la naturaleza."
-            </blockquote>
-          </div>
-        </div>
-      </div>
-
-      {/* Auth forms (left side) */}
-      <div className="w-full md:w-1/2 flex items-center justify-center px-6 py-12">
-        <Card className="w-full max-w-md">
+    <div className="flex min-h-screen bg-[#FFFAF7] relative overflow-hidden">
+      {/* Circular decorative elements - Login top */}
+      <div className="absolute top-0 left-0 w-[150px] h-[150px] bg-[#ED8FB1] rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+      
+      {/* Circular decorative elements - Login right */}
+      <div className="absolute top-[100px] right-[100px] w-[80px] h-[80px] bg-[#E9D686] rounded-full hidden md:block"></div>
+      <div className="absolute top-[220px] right-[50px] w-[120px] h-[120px] bg-[#E9D686] rounded-full hidden md:block"></div>
+      
+      {/* Auth forms (centered) */}
+      <div className="w-full flex items-center justify-center px-6 py-12 relative z-10">
+        <Card className="w-full max-w-md bg-white rounded-3xl shadow-lg overflow-hidden">
           <CardHeader className="text-center">
-            <CardTitle className="text-3xl font-bold">Cuenta</CardTitle>
-            <CardDescription>
-              Inicia sesión o crea una cuenta para disfrutar de beneficios exclusivos.
+            <CardTitle className="text-2xl font-semibold text-[#CB9C5E]">
+              {activeTab === "login" ? "Login" : "Register"}
+            </CardTitle>
+            <CardDescription className="text-gray-600">
+              {activeTab === "login" 
+                ? "Inicia sesión para acceder a tu cuenta" 
+                : "Crea una cuenta para disfrutar de beneficios exclusivos"}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-2 mb-8">
-                <TabsTrigger value="login">Iniciar Sesión</TabsTrigger>
-                <TabsTrigger value="register">Registrarse</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-2 mb-8 bg-[#f9f4ee]">
+                <TabsTrigger 
+                  value="login"
+                  className="data-[state=active]:bg-[#FDBC9B] data-[state=active]:text-white"
+                >
+                  Iniciar Sesión
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="register"
+                  className="data-[state=active]:bg-[#FDBC9B] data-[state=active]:text-white"
+                >
+                  Registrarse
+                </TabsTrigger>
               </TabsList>
 
               {/* Login Form */}
@@ -126,11 +131,12 @@ export default function AuthPage() {
                       name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Email</FormLabel>
+                          <FormLabel className="text-[#CB9C5E]">Email</FormLabel>
                           <FormControl>
                             <Input 
                               type="email" 
                               placeholder="tu@email.com" 
+                              className="bg-[#f9f4ee] border-0 focus-visible:ring-[#CB9C5E]"
                               {...field} 
                             />
                           </FormControl>
@@ -143,11 +149,12 @@ export default function AuthPage() {
                       name="password"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Contraseña</FormLabel>
+                          <FormLabel className="text-[#CB9C5E]">Contraseña</FormLabel>
                           <FormControl>
                             <Input 
                               type="password" 
-                              placeholder="••••••••" 
+                              placeholder="••••••••"
+                              className="bg-[#f9f4ee] border-0 focus-visible:ring-[#CB9C5E]"
                               {...field} 
                             />
                           </FormControl>
@@ -157,7 +164,7 @@ export default function AuthPage() {
                     />
                     <Button 
                       type="submit" 
-                      className="w-full mt-6" 
+                      className="w-full mt-8 bg-[#FDBC9B] hover:bg-[#CB9C5E] text-white rounded-full" 
                       disabled={loginMutation.isPending}
                     >
                       {loginMutation.isPending ? "Iniciando sesión..." : "Iniciar Sesión"}
@@ -175,10 +182,11 @@ export default function AuthPage() {
                       name="name"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Nombre</FormLabel>
+                          <FormLabel className="text-[#CB9C5E]">Nombre</FormLabel>
                           <FormControl>
                             <Input 
-                              placeholder="Tu nombre" 
+                              placeholder="Tu nombre"
+                              className="bg-[#f9f4ee] border-0 focus-visible:ring-[#CB9C5E]"
                               {...field} 
                             />
                           </FormControl>
@@ -191,11 +199,12 @@ export default function AuthPage() {
                       name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Email</FormLabel>
+                          <FormLabel className="text-[#CB9C5E]">Email</FormLabel>
                           <FormControl>
                             <Input 
                               type="email" 
-                              placeholder="tu@email.com" 
+                              placeholder="tu@email.com"
+                              className="bg-[#f9f4ee] border-0 focus-visible:ring-[#CB9C5E]"
                               {...field} 
                             />
                           </FormControl>
@@ -208,11 +217,12 @@ export default function AuthPage() {
                       name="password"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Contraseña</FormLabel>
+                          <FormLabel className="text-[#CB9C5E]">Contraseña</FormLabel>
                           <FormControl>
                             <Input 
                               type="password" 
-                              placeholder="••••••••" 
+                              placeholder="••••••••"
+                              className="bg-[#f9f4ee] border-0 focus-visible:ring-[#CB9C5E]"
                               {...field} 
                             />
                           </FormControl>
@@ -225,11 +235,12 @@ export default function AuthPage() {
                       name="confirmPassword"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Confirmar Contraseña</FormLabel>
+                          <FormLabel className="text-[#CB9C5E]">Confirmar Contraseña</FormLabel>
                           <FormControl>
                             <Input 
                               type="password" 
-                              placeholder="••••••••" 
+                              placeholder="••••••••"
+                              className="bg-[#f9f4ee] border-0 focus-visible:ring-[#CB9C5E]"
                               {...field} 
                             />
                           </FormControl>
@@ -239,7 +250,7 @@ export default function AuthPage() {
                     />
                     <Button 
                       type="submit" 
-                      className="w-full mt-6" 
+                      className="w-full mt-8 bg-[#FDBC9B] hover:bg-[#CB9C5E] text-white rounded-full" 
                       disabled={registerMutation.isPending}
                     >
                       {registerMutation.isPending ? "Creando cuenta..." : "Crear Cuenta"}
@@ -249,11 +260,12 @@ export default function AuthPage() {
               </TabsContent>
             </Tabs>
           </CardContent>
-          <CardFooter className="text-center text-sm text-gray-500">
-            Al registrarte, aceptas nuestros términos y política de privacidad.
-          </CardFooter>
         </Card>
       </div>
+      
+      {/* Circular decorative elements - Bottom */}
+      <div className="absolute bottom-0 right-0 w-[200px] h-[200px] bg-[#ED8FB1] rounded-full translate-x-1/2 translate-y-1/2"></div>
+      <div className="absolute bottom-[100px] left-[50px] w-[120px] h-[120px] bg-[#EBB477] rounded-full hidden md:block"></div>
     </div>
   );
 }

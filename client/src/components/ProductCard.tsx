@@ -35,13 +35,15 @@ const ProductCard = ({ product, onShowDetails }: ProductCardProps) => {
       onClick={() => onShowDetails(product)}
     >
       <div className="relative">
-        {/* Product Image */}
-        <div className="aspect-[4/3] bg-white rounded-md overflow-hidden mb-3">
-          <img 
-            src={product.image || ''}
-            alt={product.name}
-            className="w-full h-full object-contain"
-          />
+        {/* Product Image - In rounded frame with fixed aspect ratio */}
+        <div className="bg-white rounded-md overflow-hidden mb-3 relative" style={{ aspectRatio: '1/1' }}>
+          <div className="absolute inset-0 p-2 flex items-center justify-center">
+            <img 
+              src={product.image || ''}
+              alt={product.name}
+              className="max-w-full max-h-full object-contain"
+            />
+          </div>
         </div>
         
         {/* Product Name */}

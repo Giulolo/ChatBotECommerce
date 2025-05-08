@@ -90,11 +90,12 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen bg-[#FFFAF7]">
-      {/* Hero Section with Featured Product */}
-      <div className="relative py-16">
+      {/* Hero Section with Featured Product and Circular Elements */}
+      <div className="relative py-12 overflow-hidden">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center">
-            <div className="md:w-1/2 py-6">
+          <div className="flex flex-col md:flex-row items-center relative">
+            {/* Left side content */}
+            <div className="md:w-1/2 py-6 relative z-10">
               <h1 className="text-4xl md:text-5xl font-semibold mb-6 text-[#212121]">
                 Productos artesanales para ti
               </h1>
@@ -110,22 +111,34 @@ const HomePage = () => {
               </Button>
             </div>
             
-            <div className="md:w-1/2 relative bg-[#FDBC9B] p-8 rounded-xl mt-8 md:mt-0">
-              {!isLoadingProducts && products && products.length > 0 && (
-                <div className="flex flex-col items-center">
-                  <img 
-                    src={products[0].image || ''} 
-                    alt={products[0].name} 
-                    className="w-full max-w-md h-auto object-contain mb-4"
-                  />
-                  <Button 
-                    className="mt-4 bg-amber-500 hover:bg-amber-600 rounded-full px-6"
-                    onClick={() => handleShowProductDetails(products[0])}
-                  >
-                    Comprar <span className="ml-2 font-bold">${products[0].price}</span>
-                  </Button>
-                </div>
-              )}
+            {/* Right side with main image area and circular elements */}
+            <div className="md:w-1/2 relative h-[450px]">
+              {/* Main circle background */}
+              <div className="absolute right-0 top-0 w-[450px] h-[450px] bg-[#FDBC9B] rounded-full"></div>
+              
+              {/* Featured product image */}
+              <div className="absolute right-[75px] top-[75px] w-[300px] h-[300px] flex items-center justify-center z-10">
+                {!isLoadingProducts && products && products.length > 0 && (
+                  <div className="text-center w-full">
+                    <img 
+                      src={products[0].image || ''} 
+                      alt={products[0].name} 
+                      className="w-full h-full object-contain"
+                    />
+                    <Button 
+                      className="mt-6 bg-amber-500 hover:bg-amber-600 rounded-full px-6"
+                      onClick={() => handleShowProductDetails(products[0])}
+                    >
+                      Comprar <span className="ml-2 font-bold">${parseFloat(products[0].price.toString()).toFixed(2)}</span>
+                    </Button>
+                  </div>
+                )}
+              </div>
+              
+              {/* Decorative circles */}
+              <div className="absolute top-[10px] right-[-60px] w-[120px] h-[120px] bg-[#E9D686] rounded-full z-0"></div>
+              <div className="absolute top-[200px] right-[-80px] w-[120px] h-[120px] bg-[#ED8FB1] rounded-full z-0"></div>
+              <div className="absolute top-[350px] right-[-50px] w-[120px] h-[120px] bg-[#EBB477] rounded-full z-0"></div>
             </div>
           </div>
         </div>
