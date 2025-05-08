@@ -23,14 +23,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // PRODUCTS
   app.get("/api/products", async (req: Request, res: Response) => {
     try {
-      const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
-      console.log("Fetching products with limit:", limit);
-      const products = await storage.getProducts(limit);
-      console.log("Products fetched:", products?.length || 0);
-      res.json(products);
+      const results = await db.execute('SELECT * FROM products');
+      console.log('✅ Products obtenidos:', results.rows.length);
+      res.json(results.rows);
     } catch (error) {
-      console.error("Error fetching products:", error);
-      res.status(500).json({ message: "Error fetching products" });
+      console.error('❌ Error al obtener products:', error);
+      res.status(500).json({ message: "Error al obtener productos" });
     }
   });
   
