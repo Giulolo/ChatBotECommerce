@@ -66,7 +66,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setIsError(false);
     
     try {
-      const response = await fetch('/api/cart', {
+      const response = await apiRequest('GET', '/api/cart', undefined, {
         headers: {
           'X-Session-ID': sessionId
         }
