@@ -97,9 +97,10 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(true);
     
     try {
-      const response = await apiRequest('POST', '/api/cart', {
-        ...item,
-        sessionId
+      const response = await apiRequest('POST', '/api/cart', { ...item }, {
+        headers: {
+          'X-Session-ID': sessionId
+        }
       });
       
       const data = await response.json();
@@ -122,7 +123,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(true);
     
     try {
-      const response = await apiRequest('PUT', `/api/cart/${id}`, { quantity });
+      const response = await apiRequest('PUT', `/api/cart/${id}`, { quantity }, {
+        headers: {
+          'X-Session-ID': sessionId
+        }
+      });
       
       const data = await response.json();
       setCart(data);
@@ -144,7 +149,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(true);
     
     try {
-      const response = await apiRequest('DELETE', `/api/cart/${id}`, undefined);
+      const response = await apiRequest('DELETE', `/api/cart/${id}`, undefined, {
+        headers: {
+          'X-Session-ID': sessionId
+        }
+      });
       
       const data = await response.json();
       setCart(data);
@@ -166,7 +175,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(true);
     
     try {
-      const response = await apiRequest('DELETE', '/api/cart', undefined);
+      const response = await apiRequest('DELETE', '/api/cart', undefined, {
+        headers: {
+          'X-Session-ID': sessionId
+        }
+      });
       
       const data = await response.json();
       setCart(data);
