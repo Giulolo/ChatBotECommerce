@@ -61,11 +61,7 @@ app.use((req, res, next) => {
   // It is the only port that is not firewalled.
   // este aca tendria que poner el puerto base q instalamos en mariadb al comienzo de la instalacion y el host seria parte del ip que usamos en la misma aplicacion en mi caso es 3307 con localhost 127.0.0.1  
   const port = 5000;
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
+  server.listen(port, "0.0.0.0", () => {
     log(`serving on port ${port}`);
   });
 })();
